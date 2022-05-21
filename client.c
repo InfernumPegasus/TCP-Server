@@ -25,19 +25,18 @@ int main() {
             print_dir("");
         } else if (strcmp(buffer, PWD_COMMAND_CLIENT) == 0) {
             print_full_path();
-        } else if (strcmp(buffer, "send\n") == 0) {
-//            send_file_menu(sock);
         } else if (strcmp(buffer, EXIT_COMMAND_CLIENT) == 0) {
             close_socket(sock);
             printf("Disconnected from the server.\n");
             exit(0);
-        } else if (strcmp(buffer, "!exit\n") == 0) {
+        } else if (strcmp(buffer, EXIT_COMMAND_ALL) == 0) {
             close_socket(sock);
             printf("[+]Client closed.\n");
             exit(0);
         } else if (
                 strcmp(buffer, LS_COMMAND_SERVER) != 0 &&
                 strcmp(buffer, PWD_COMMAND_SERVER) != 0 &&
+                strcmp(buffer, FILE_INFO) != 0 &&
                 strcmp(buffer, EXIT_COMMAND_ALL) != 0) {
             puts("Unknown command!");
         }

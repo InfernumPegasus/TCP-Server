@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <pthread.h>
 #include <signal.h>
+#include <sys/stat.h>
 
 #define MAX_CLIENTS 4
 
@@ -45,6 +46,9 @@
 #define EXIT_COMMAND_CLIENT "exit\n"
 #define EXIT_COMMAND_ALL "!exit\n"
 
+// file info command
+#define FILE_INFO "file\n"
+
 
 void get_string(char* string, int len);
 
@@ -66,11 +70,6 @@ int check(ssize_t exp, const char *msg);
 
 void pipe_handler(int);
 
-// TODO
-//void send_file();
-//void receive_file();
-
-// TODO функция для считывания порта для создания и подключения к серверу
-//char *parse_port(char *arg);
+void get_file_info();
 
 #endif //SERVER_FUNCTIONS_H

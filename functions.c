@@ -14,8 +14,7 @@ void print_help() {
            "!ls  - print files in server dir\n"
            "pwd  - print full client path\n"
            "!pwd - print full server path\n"
-//           "send - send file\n"
-//           "get  - get file\n"
+           "file - get file info\n"
            "exit - close client\n\n");
 }
 
@@ -106,4 +105,27 @@ int check(ssize_t exp, const char *msg) {
 void pipe_handler(int) {
     fputs("Server closed!\n", stderr);
     exit(0);
+}
+
+void get_file_info() {
+    char filename[FILENAME_MAX];
+
+    printf("Enter filename: ");
+    get_string(filename, FILENAME_MAX);
+    filename[strcspn(filename, "\n")] = 0;
+
+    struct stat file_stats;
+
+    if (stat(filename, &file_stats) != 0) {
+        perror("Getting stats error!");
+        return;
+    }
+
+    printf("Inode number: %lu\n",          file_stats.st_ino);
+    printf("User ID of owner: %u\n",       file_stats.st_uid);
+    printf("Group ID of owner: %u\n",      file_stats.st_gid);
+    printf("Total file size: %lu bytes\n", file_stats.st_size);
+    printf("Last status change: %s",       ctime(&file_stats.st_ctime));
+    printf("Last file access: %s",         ctime(&file_stats.st_atime));
+    printf("Last file modification: %s",   ctime(&file_stats.st_mtime));
 }

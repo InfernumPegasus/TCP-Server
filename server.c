@@ -42,6 +42,10 @@ void *handle_server(void* arg) {
             print_full_path();
         }
 
+        if (strcmp(buffer, FILE_INFO) == 0) {
+            get_file_info();
+        }
+
         if (strcmp(buffer, EXIT_COMMAND_CLIENT) == 0) {
             close_socket(clients_sockets[index]);
             printf("[+]Client disconnected.\n");
