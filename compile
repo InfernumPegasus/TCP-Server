@@ -1,3 +1,0 @@
-#!/bin/bash
-gcc -o client functions.c client.c
-gcc -o server functions.c server.c

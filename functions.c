@@ -58,14 +58,16 @@ void print_dir(char *path) {
 void print_full_path() {
     char *path = malloc(FILENAME_SIZE);
     path = getcwd(path, FILENAME_SIZE);
+    if (path == NULL) {
+        perror("[-]Print path error");
+        return;
+    }
     printf("Path: %s\n", path);
 }
 
 void close_socket(int socket_fd) {
-    if (close(socket_fd)) {
-        fputs("[-]Error closing socket", stderr);
-        exit(EXIT_FAILURE);
-    }
+    check(close(socket_fd),
+          "[-]Error closing socket");
 }
 
 void configure_address(struct sockaddr_in *address, int port, const char *ip) {
@@ -75,11 +77,9 @@ void configure_address(struct sockaddr_in *address, int port, const char *ip) {
 }
 
 int create_socket() {
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0) {
-        perror("[-]Socket error");
-        exit(1);
-    }
+    int sock = check(socket(AF_INET, SOCK_STREAM, 0),
+          "[-]Socket error");
+
     printf("[+]TCP server socket created.\n");
     return sock;
 }
@@ -87,10 +87,23 @@ int create_socket() {
 void send_to_server(int sock, char *buffer) {
     bzero(buffer, MESSAGE_SIZE);
     printf("Enter command: ");
+
     get_string(buffer, MESSAGE_SIZE);
     printf("Client: %s\n", buffer);
-    if (send(sock, buffer, strlen(buffer), 0) < 0) {
-        puts("Error while sending!");
+
+    check(send(sock, buffer, strlen(buffer), 0),
+          "[-]Error while sending!");
+}
+
+int check(ssize_t exp, const char *msg) {
+    if (exp == SOCKET_ERROR) {
+        perror(msg);
         exit(1);
     }
+    return (int)exp;
+}
+
+void pipe_handler(int) {
+    fputs("Server closed!\n", stderr);
+    exit(0);
 }

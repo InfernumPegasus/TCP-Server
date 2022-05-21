@@ -7,10 +7,17 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <dirent.h>
+#include <stdbool.h>
+#include <pthread.h>
+#include <signal.h>
+
+#define MAX_CLIENTS 4
+
+#define SOCKET_ERROR -1
 
 /* Buffers */
-#define MESSAGE_SIZE  1024
-#define FILENAME_SIZE 512
+#define MESSAGE_SIZE  256
+#define FILENAME_SIZE 256
 
 /* Connection stuff */
 #define PORT 5566
@@ -36,7 +43,7 @@
 
 // exit command
 #define EXIT_COMMAND_CLIENT "exit\n"
-
+#define EXIT_COMMAND_ALL "!exit\n"
 
 
 void get_string(char* string, int len);
@@ -54,6 +61,10 @@ void configure_address(struct sockaddr_in *address, int port, const char *ip);
 int create_socket();
 
 void send_to_server(int sock, char *buffer);
+
+int check(ssize_t exp, const char *msg);
+
+void pipe_handler(int);
 
 // TODO
 //void send_file();
