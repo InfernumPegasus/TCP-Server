@@ -56,7 +56,7 @@ void print_help();
 
 void print_full_path();
 
-void print_dir(char *path);
+void print_dir();
 
 void close_socket(int socket_fd);
 
@@ -64,7 +64,7 @@ void configure_address(struct sockaddr_in *address, int port, const char *ip);
 
 int create_socket();
 
-void send_to_server(int sock, char *buffer);
+void send_by_fd(int sock, char *buffer);
 
 int check(ssize_t exp, const char *msg);
 

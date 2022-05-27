@@ -18,8 +18,11 @@ void print_help() {
            "exit - close client\n\n");
 }
 
-// simple dir_walk implementation
-void print_dir(char *path) {
+void print_dir() {
+    char *path = malloc(sizeof(char) * PATH_MAX);
+    printf("Enter path: ");
+    get_string(path, PATH_MAX);
+    path[strcspn(path, "\n")] = 0;
 
     if ( strcmp(path, "") == 0 ) {
         path = malloc(FILENAME_SIZE);
@@ -58,7 +61,7 @@ void print_full_path() {
     char *path = malloc(FILENAME_SIZE);
     path = getcwd(path, FILENAME_SIZE);
     if (path == NULL) {
-        perror("[-]Print path error");
+        perror("Print path error");
         return;
     }
     printf("Path: %s\n", path);
@@ -66,7 +69,7 @@ void print_full_path() {
 
 void close_socket(int socket_fd) {
     check(close(socket_fd),
-          "[-]Error closing socket");
+          "Error closing socket");
 }
 
 void configure_address(struct sockaddr_in *address, int port, const char *ip) {
@@ -77,21 +80,15 @@ void configure_address(struct sockaddr_in *address, int port, const char *ip) {
 
 int create_socket() {
     int sock = check(socket(AF_INET, SOCK_STREAM, 0),
-          "[-]Socket error");
+                     "Socket error");
 
-    printf("[+]TCP server socket created.\n");
+    printf("Socket with value %d created.\n", sock);
     return sock;
 }
 
-void send_to_server(int sock, char *buffer) {
-    bzero(buffer, MESSAGE_SIZE);
-    printf("Enter command: ");
-
-    get_string(buffer, MESSAGE_SIZE);
-    printf("Client: %s\n", buffer);
-
+void send_by_fd(int sock, char *buffer) {
     check(send(sock, buffer, strlen(buffer), 0),
-          "[-]Error while sending!");
+          "Error while sending!");
 }
 
 int check(ssize_t exp, const char *msg) {
@@ -103,8 +100,8 @@ int check(ssize_t exp, const char *msg) {
 }
 
 void pipe_handler(int) {
-    fputs("Server closed!\n", stderr);
-    exit(0);
+    fputs("Wrong connection! Try again with another ip.\n", stderr);
+    exit(1);
 }
 
 void get_file_info() {
