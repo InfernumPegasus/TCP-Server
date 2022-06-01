@@ -11,8 +11,10 @@
 #include <pthread.h>
 #include <signal.h>
 #include <sys/stat.h>
+#include <semaphore.h>
+#include <fcntl.h>
 
-#define MAX_CLIENTS 4
+#define MAX_CLIENTS 3
 
 #define SOCKET_ERROR -1
 
